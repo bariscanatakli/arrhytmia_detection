@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PTB-XL Data Analysis</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Merriweather:wght@400;500;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <style>
+/* 1. THE SETUP - LIGHT THEME WITH SCROLL SNAP */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+}
+
+body {
+  background-color: #f1f5f9;
+  display: grid;
+  gap: 60px; /* Increased gap between slides */
+  grid-template-columns: 1fr;
+  min-height: 100vh;
+  padding: 60px 0; /* Add body padding to avoid edges */
+  place-items: center;
+  color: #1e293b;
+  margin: 0;
+}
+
+.slide-container {
+  background-color: #ffffff;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  font-family: "DM Sans", sans-serif;
+  gap: 15px;
+  height: 880px;
+  margin-bottom: 120px;
+  
+  /* Changed from center to flex-start to prevent top clipping */
+  justify-content: flex-start; 
+  
+  overflow: hidden;
+  padding: 80px 60px 40px 60px; /* Increased Top Padding significantly */
+  position: relative;
+  width: 1280px;
+
+  /* SCROLL SNAP LOGIC */
+  scroll-snap-align: center; /* Align center to avoid getting stuck at the very top */
+  scroll-margin-top: 0px;  /* Extra breathing room for fixed headers/components */
+}
+
+/* 2. TYPOGRAPHY & COLORS */
+
+.slide-container h1 {
+  color: #0369a1;
+  font-family: "Merriweather", serif;
+  font-weight: 900;
+  line-height: 1.1;
+  margin: 0;
+  font-size: 72px;
+}
+
+.slide-container .slide-title {
+  font-family: "Merriweather", serif;
+  font-weight: 700;
+  margin: 0;
+  color: #0369a1;
+  font-size: 48px;
+  margin-bottom: 40px; /* More space below title */
+  align-self: flex-start;
+  width: 100%;
+  border-bottom: 3px solid #e0f2fe;
+  padding-bottom: 15px;
+}
+
+.slide-container h3 {
+  font-family: "Merriweather", serif;
+  font-weight: 700;
+  font-size: 28px;
+  margin-bottom: 15px;
+  color: #0c4a6e;
+}
+
+.slide-container p,
+.slide-container li {
+  font-family: "DM Sans", sans-serif;
+  font-size: 20px;
+  line-height: 1.6;
+  color: #475569;
+}
+
+.slide-container .subtitle {
+  color: #64748b;
+  font-size: 32px;
+  font-weight: 400;
+  margin-top: 20px;
+}
+
+/* 3. LAYOUTS */
+
+.content-area {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: flex-start; /* Align content to top */
+  width: 100%;
+  padding-top: 20px;
+}
+
+.two-column {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  height: 100%;
+  width: 100%;
+  align-items: flex-start; /* Align items to top instead of center */
+}
+
+.image-wrapper {
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  height: 450px;
+  width: 100%;
+  background: #f8fafc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+}
+
+.image-wrapper img {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+}
+
+/* Tiles */
+.tile-content-wrapper {
+  display: flex;
+  flex-grow: 1;
+  width: 100%;
+  align-items: center;
+}
+
+.tiled-content {
+  display: flex;
+  gap: 30px;
+  width: 100%;
+  height: 400px;
+}
+
+.tile {
+  background-color: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 30px;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+.tile:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.tile .icon {
+  color: #0284c7;
+  font-size: 56px;
+  margin-bottom: 20px;
+}
+
+/* Lists */
+.bullet-list {
+  width: 100%;
+}
+
+.bullet-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.bullet-list li {
+  background: #ffffff;
+  margin-bottom: 15px;
+  padding: 18px 25px 18px 60px;
+  border-radius: 12px;
+  position: relative;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.05);
+}
+
+.bullet-list i {
+  color: #0284c7;
+  font-size: 24px;
+  left: 20px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Bleed Layout */
+.bleed-image-layout {
+  padding: 0;
+  display: grid;
+  grid-template-columns: 40% 60%;
+}
+
+.bleed-image-layout .content-container {
+  padding: 80px 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.bleed-image-layout .image-container {
+  height: 100%;
+  width: 100%;
+  background: #e2e8f0;
+}
+
+.bleed-image-layout img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Timeline */
+.timeline-layout {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  padding-top: 60px;
+  width: 100%;
+}
+
+.timeline-line {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: #e2e8f0;
+  z-index: 0;
+}
+
+.timeline-item {
+  position: relative;
+  width: 22%;
+  text-align: center;
+  z-index: 1;
+}
+
+.timeline-dot {
+  width: 24px;
+  height: 24px;
+  background: #0ea5e9;
+  border: 4px solid #ffffff;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  box-shadow: 0 0 0 4px #bae6fd;
+}
+
+.timeline-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+}
+
+/* Demo Slide */
+.demo-slide {
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+    color: white;
+    justify-content: center; /* Keep center for demo slide */
+    padding: 60px;
+}
+.demo-slide h1, .demo-slide p {
+    color: white;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.demo-icon {
+    font-size: 120px;
+    margin-bottom: 30px;
+    color: #e0f2fe;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Numbers */
+.highlight-numbers-layout {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    text-align: center;
+}
+
+.highlight-numbers-layout .number-item {
+    flex: 1;
+    padding: 20px;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+}
+
+.highlight-numbers-layout .number {
+    font-size: 60px;
+    font-weight: 700;
+    color: #0369a1;
+    line-height: 1.2;
+}
+
+.highlight-numbers-layout .number-label {
+    font-size: 20px;
+    color: #64748b;
+    margin-top: 10px;
+}
+
+body::-webkit-scrollbar,
+html::-webkit-scrollbar,
+.slide-container::-webkit-scrollbar {
+    display: none;
+}
+
+body, html, .slide-container {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+    </style>
+    <script>
+        function handleImageError(img) {
+            const name = img.getAttribute('alt') || 'Image';
+            img.src = `https://placehold.co/800x600/e2e8f0/475569?text=${encodeURIComponent(name)}`;
+            img.style.objectFit = 'cover';
+        }
+    </script>
+</head>
+<body>
+
+<!-- Slide 1: Title -->
+<div class="slide-container" style="justify-content: center;">
+    <div class="content-area" style="text-align: left; border-left: 16px solid #0369a1; padding-left: 60px;">
+        <h1>PTB-XL Data Analysis</h1>
+        <p class="subtitle">Exploratory Data Analysis (EDA) & MATLAB Dashboard Integration</p>
+        <p style="margin-top: 40px; font-size: 24px; color: #64748b;"><i class="fa-regular fa-calendar"></i> Project Overview Presentation</p>
+    </div>
+</div>
+
+<!-- Slide 2: Dataset Introduction (Fixed Spacing) -->
+<div class="slide-container">
+    <h2 class="slide-title">What is the PTB-XL Dataset?</h2>
+    <div class="content-area"   >
+        <div class="two-column">
+            <div class="bullet-list">
+                <ul>
+                    <li><i class="fa-solid fa-database"></i> <strong>Large Scale:</strong> A major dataset comprising <strong>21,837</strong> clinical 12-lead ECG records.</li>
+                    <li><i class="fa-solid fa-users"></i> <strong>Patient Diversity:</strong> Data collected from <strong>18,885</strong> unique patients.</li>
+                    <li><i class="fa-solid fa-clock"></i> <strong>Duration:</strong> Each recording is exactly 10 seconds long.</li>
+                    <li><i class="fa-solid fa-user-doctor"></i> <strong>Annotation:</strong> Interpreted by cardiologists according to the SCP-ECG standard.</li>
+                    <li><i class="fa-solid fa-file-waveform"></i> <strong>Format:</strong> Stored in WFDB format with 500Hz & 100Hz sampling.</li>
+                </ul>
+            </div>
+            <div class="image-wrapper" style="background: white; border: none; box-shadow: none;">
+                 <!-- Using a font awesome icon as a visual representation since no specific image was provided for this -->
+                 <i class="fa-solid fa-heart-pulse" style="font-size: 250px; color: #e0f2fe;    "></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 3: Demographics: Age Groups & Sex -->
+<div class="slide-container">
+    <h2 class="slide-title">Demographics: Age Groups & Sex</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <p>Analysis of the patient population reveals key demographic trends critical for model training:</p>
+                <ul style="margin-top: 30px; line-height: 2;">
+                    <li><strong>Distribution:</strong> Significant concentration in older age groups (60-79 years).</li>
+                    <li><strong>Gender Balance:</strong> 
+                        <span style="color:#e37400; font-weight:700;">Males</span> vs 
+                        <span style="color:#005088; font-weight:700;">Females</span>. Males are more dominant in pathological groups.
+                    </li>
+                    <li><strong>Impact:</strong> This skew must be addressed during training to prevent bias.</li>
+                </ul>
+            </div>
+            <div class="image-wrapper">
+                <img src="octave_age_group_sex_distribution.png" alt="Age Group & Sex Distribution Chart" onerror="handleImageError(this)">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 4: General Population Age Distribution -->
+<div class="slide-container">
+    <h2 class="slide-title">General Population Age Distribution</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div class="image-wrapper">
+                <img src="octave_age_distribution.png" alt="General Age Histogram" onerror="handleImageError(this)">
+            </div>
+            <div>
+                <h3>Detailed Age Histogram</h3>
+                <p>This histogram provides a granular view of the age distribution across the entire dataset.</p>
+                <ul style="margin-top: 20px;">
+                    <li><strong>Peak:</strong> The peak density is observed around age 60-65.</li>
+                    <li><strong>Tail:</strong> There is a significant tail extending into the 80s and 90s, representing geriatric cardiology cases.</li>
+                    <li><strong>Younger Population:</strong> Sparse data for patients under 20 years old.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 5: Class Distribution -->
+<div class="slide-container">
+    <h2 class="slide-title">Arrhythmia Class Distribution</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div class="image-wrapper">
+                <img src="octave_arrhythmia_class_distribution.png" alt="Arrhythmia Class Distribution" onerror="handleImageError(this)">
+            </div>
+            <div>
+                <h3>Class Imbalance</h3>
+                <p>Our dashboard analysis highlights a severe class imbalance, a common challenge in medical datasets.</p>
+                <div class="bullet-list" style="margin-top: 20px;">
+                    <ul>
+                        <li><i class="fa-solid fa-triangle-exclamation"></i> <strong>Dominant Classes:</strong> Normal (NORM) and Sinus Rhythm (SR) constitute the majority.</li>
+                        <li><i class="fa-solid fa-scale-unbalanced"></i> <strong>Rare Classes:</strong> Pathologies like AFLT (Atrial Flutter) are underrepresented.</li>
+                        <li><i class="fa-solid fa-wrench"></i> <strong>Solution:</strong> Requires weighted loss functions.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 6: Sex Distribution by Arrhythmia -->
+<div class="slide-container">
+    <h2 class="slide-title">Sex Distribution by Arrhythmia Class</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <h3>Gender Disparities in Diagnosis</h3>
+                <p>This chart breaks down the male/female ratio for each specific arrhythmia class.</p>
+                <ul style="margin-top: 20px;">
+                    <li><strong>SR (Sinus Rhythm):</strong> Shows a roughly balanced gender distribution.</li>
+                    <li><strong>Pathologies:</strong> Certain conditions like Ischemic Heart Disease (often associated with MI) may show a higher prevalence in males in this dataset.</li>
+                    <li><strong>Insight:</strong> Models must be robust against spurious correlations.</li>
+                </ul>
+            </div>
+            <div class="image-wrapper">
+                <img src="octave_arrhythmia_sex_distribution.png" alt="Sex Distribution per Arrhythmia Class" onerror="handleImageError(this)">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 7: Metadata Architecture -->
+<div class="slide-container">
+    <h2 class="slide-title">Metadata Architecture (CSV)</h2>
+    <div class="tile-content-wrapper">
+        <div class="tiled-content">
+            <div class="tile">
+                <div class="icon"><i class="fa-solid fa-file-medical"></i></div>
+                <h3>SCP Codes</h3>
+                <p>Standardized diagnostic codes per record (e.g., 'AFIB': 100.0). Supports multi-label classification logic.</p>
+            </div>
+            <div class="tile">
+                <div class="icon"><i class="fa-solid fa-id-card"></i></div>
+                <h3>Demographics</h3>
+                <p>Patient ID, Age, Sex, Height, and Weight. Missing values are sanitized (NaN handling) via MATLAB scripts.</p>
+            </div>
+            <div class="tile">
+                <div class="icon"><i class="fa-solid fa-database"></i></div>
+                <h3>Signal References</h3>
+                <p>Pointers to raw high-resolution (500Hz) and low-resolution (100Hz) WFDB signal files.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 8: Filtering Logic -->
+<div class="slide-container">
+    <h2 class="slide-title">Dynamic Filtering Logic</h2>
+    <div class="content-area">
+        <div class="bullet-list">
+            <ul>
+                <li><i class="fa-solid fa-filter"></i> <strong>Criteria-Based Selection:</strong> <br>Interactive UI allows selection by age range, sex, and specific arrhythmia type.</li>
+                <li><i class="fa-solid fa-code"></i> <strong>Backend Processing:</strong> <br><code>ptbxl_read_metadata.m</code> scans CSV using logical indexing for O(1) access speed.</li>
+                <li><i class="fa-solid fa-chart-column"></i> <strong>Real-Time Visualization:</strong> <br>Histograms update instantly to reflect the selected sub-population's statistics.</li>
+                <li><i class="fa-solid fa-microscope"></i> <strong>Deep Dive:</strong> <br>Allows isolation of specific cases (e.g., "Females under 40 with MI") for detailed review.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 9: Signal Viz -->
+<div class="slide-container bleed-image-layout">
+    <div class="content-container">
+        <h2 class="slide-title">Signal Visualization</h2>
+        <h3>Visual Verification</h3>
+        <p>The dashboard integrates directly with the raw signal files using the WFDB toolbox.</p>
+        <p><strong>Capabilities:</strong></p>
+        <ul>
+            <li>Displays all 12 Leads (I, II, III, aVR, etc.).</li>
+            <li>Time-domain inspection for noise and artifacts.</li>
+            <li>Immediate visual correlation between the SCP Code labels and the waveform morphology.</li>
+        </ul>
+    </div>
+    <div class="image-container">
+        <img src="real_patient_signals.png" class="bleed-image-side" alt="12-Lead ECG Signal Plot" onerror="handleImageError(this)">
+    </div>
+</div>
+
+<!-- Slide 10: Prototype Model -->
+<div class="slide-container">
+    <h2 class="slide-title">Prototype: Metadata Classification</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div class="image-wrapper">
+                <img src="octave_age_normal_vs_abnormal.png" alt="Normal vs Abnormal Age Distribution" onerror="handleImageError(this)">
+            </div>
+            <div>
+                <h3>Baseline Model: Normal vs Abnormal</h3>
+                <p>Before deep learning, we established a baseline using <code>ptbxl_simple_model.m</code> based purely on metadata.</p>
+                <p><strong>Insight:</strong> The graph clearly shows that "Abnormal" cases (Teal) have a much wider and older age distribution compared to "Normal" cases. This proves that age is a highly discriminative feature even for simple logistic regression.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 11: Co-occurrence Heatmap -->
+<div class="slide-container">
+    <h2 class="slide-title">Disease Co-occurrence Matrix</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <h3>Correlations Between Classes</h3>
+                <p>Using Jaccard Similarity in <code>ptbxl_data_analysis.m</code>, we mapped how often different arrhythmias occur together.</p>
+                <p><strong>Interpretation:</strong></p>
+                <ul>
+                    <li><strong>Yellow/Light:</strong> High co-occurrence.</li>
+                    <li><strong>Dark Blue:</strong> Low/No correlation.</li>
+                </ul>
+                <p>This helps in defining multi-label learning strategies.</p>
+            </div>
+            <div class="image-wrapper">
+                <img src="octave_scp_cooccurrence_heatmap_normalized.png" alt="SCP Codes Co-occurrence Heatmap" onerror="handleImageError(this)">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 12: Age Stats Analysis -->
+<div class="slide-container">
+    <h2 class="slide-title">Age Statistics by Arrhythmia Class</h2>
+    <div class="content-area">
+        <div class="two-column">
+             <div class="image-wrapper">
+                <img src="octave_arrhythmia_age_stats.png" alt="Average age statistics per arrhythmia class" onerror="handleImageError(this)">
+            </div>
+            <div>
+                <h3>Mean Age and Standard Deviation</h3>
+                <p>The average age (bars) and standard deviation (error bars) were analyzed for each arrhythmia class.</p>
+                <p>The chart indicates that classes like <strong>PVC</strong> and <strong>PAC</strong> have a higher average patient age, whereas <strong>SBRAD</strong> or <strong>NORM</strong> classes are frequently observed in younger populations as well.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 13: Workflow -->
+<div class="slide-container">
+    <h2 class="slide-title">Project Workflow</h2>
+    <div class="content-area">
+        <div class="timeline-layout">
+            <div class="timeline-line"></div>
+            
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <h3>Data Ingestion</h3>
+                <div class="timeline-content">
+                    <p>Load CSV & WFDB files into MATLAB/Octave.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <h3>Preprocessing</h3>
+                <div class="timeline-content">
+                    <p>Handle NaNs, clean labels, resize signals.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <h3>EDA (MATLAB)</h3>
+                <div class="timeline-content">
+                    <p>Visual discovery & stats via Dashboard.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <h3>Modeling</h3>
+                <div class="timeline-content">
+                    <p>Feature extraction & Deep Learning (Python).</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Slide 14: Key Takeaways -->
+<div class="slide-container">
+    <h2 class="slide-title">Key Takeaways</h2>
+    <div class="content-area">
+        <div class="highlight-numbers-layout">
+            <div class="number-item">
+                <div class="number">21k+</div>
+                <div class="number-label">ECG Records</div>
+            </div>
+            <div class="number-item">
+                <div class="number">71</div>
+                <div class="number-label">Arrhythmia Classes</div>
+            </div>
+            <div class="number-item">
+                <div class="number">12</div>
+                <div class="number-label">Channels (Leads)</div>
+            </div>
+        </div>
+        <div style="margin-top: 50px; padding: 20px; background: #f0f9ff; border-left: 5px solid #0ea5e9; border-radius: 4px;">
+            <p style="margin: 0; font-size: 22px; color: #0369a1;">
+                <strong>Conclusion:</strong> The MATLAB-based EDA process successfully revealed the dataset's imbalanced structure and demographic properties, providing essential "prior knowledge" to guide the Deep Learning model architecture.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 15: Demo Time -->
+<div class="slide-container demo-slide">
+    <div class="content-area" style="text-align: center;">
+        <i class="fa-solid fa-laptop-code demo-icon"></i>
+        <h1 style="font-size: 100px; margin-bottom: 20px;">Demo Time</h1>
+        <p style="font-size: 32px;">Let's run the Dashboard live.</p>
+    </div>
+</div>
+
+<!-- Slide 16: Q&A -->
+<div class="slide-container">
+    <div class="content-area" style="text-align: center;">
+        <h2 style="font-size: 80px; color: #0369a1;">Questions?</h2>
+        <p style="font-size: 24px; margin-top: 20px; color: #64748b;">Thank you for listening.</p>
+    </div>
+</div>
+
+</body>
+</html>
