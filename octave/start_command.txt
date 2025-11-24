@@ -1,0 +1,1 @@
+QT_STYLE_OVERRIDE=Fusion QT_QPA_PLATFORMTHEME= octave --persist --eval "graphics_toolkit qt; addpath('octave'); pkg load io; ptbxl_dashboard('dataset')"
