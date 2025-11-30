@@ -1,14 +1,20 @@
-# Arrhythmia Detection (MATLAB / Octave)
+# Arrhythmia Detection (PTB-XL, MATLAB / GNU Octave)
 
-This branch is simplified for MATLAB / GNU Octave users. The focus is on PTB-XL metadata exploration, lightweight classical models, and an interactive dashboard.
+Metadata-first exploration of the PTB-XL ECG dataset with lightweight classical models, an Octave dashboard, and optional raw signal preview through WFDB.
 
-Presentations: https://presentations.bariscanatakli.com/ptbxl/ (offline: open `presentation.html` locally; no external assets required)
+Presentation: https://presentations.bariscanatakli.com/ptbxl/ (offline: open `presentation.html` locally; no external assets required)
+
+## What you get
+- Fast metadata EDA (age/sex distributions, class balance, SCP co-occurrence) saved as PNGs under `analysis_results/`.
+- Interactive Octave dashboard with filters (age range, sex, arrhythmia class) and patient-level summaries.
+- Optional signal preview in the dashboard when WFDB is installed.
+- Simple metadata-only baseline (`ptbxl_simple_model`) for NORM vs non-NORM separation.
 
 ## Prerequisites
 - MATLAB R2021b+ **or** GNU Octave 6+  
 - Octave `io` package (for CSV parsing)  
 - PTB-XL dataset unpacked under `dataset/physionet.org/files/ptb-xl/1.0.3/` (must include `ptbxl_database.csv` and at least one of `records100/` or `records500/`)  
-- Optional: WFDB Toolbox (MATLAB/Octave) for raw signal preview via `rdsamp`
+- Optional: WFDB Toolbox (MATLAB/Octave) to enable raw signal preview via `rdsamp`
 
 Dataset layout:
 ```
@@ -20,48 +26,50 @@ dataset/
     scp_statements.csv
 ```
 - If your dataset lives elsewhere, set `PTBXL_BASE=/custom/path/to/ptb-xl/1.0.3` before running any Octave scripts.
-- All Octave entry points now auto-detect the dataset location with `ptbxl_autodetect_base`:
-  - Checks the function argument, then `PTBXL_BASE`, then common relative paths (repo root, `octave/` folder).
-  - Errors list exactly what is missing (`ptbxl_database.csv`, `scp_statements.csv`, `records100`/`records500`) to simplify setup.
+- All Octave entry points auto-detect the dataset location with `ptbxl_autodetect_base` and report missing pieces (`ptbxl_database.csv`, `scp_statements.csv`, `records100`/`records500`) clearly.
 
 ## Quick start (Octave / MATLAB)
 From the repo root:
 ```octave
-addpath('octave'); pkg load io; % in MATLAB omit pkg load
-ptbxl_data_analysis        % summary + figures to analysis_results/
-% graphics_toolkit qt; ptbxl_dashboard  % interactive dashboard (Octave)
+addpath('octave'); pkg load io;   % in MATLAB omit pkg load
+ptbxl_data_analysis              % summary + figures saved to analysis_results/
+% graphics_toolkit qt; ptbxl_dashboard  % interactive dashboard (Octave GUI)
 ```
-- `ptbxl_data_analysis` prints dataset stats (records/patients, age range, sex split, missing values) and saves PNGs for age/sex/arrhythmia distributions and SCP co-occurrence under `analysis_results/`.
-- `ptbxl_dashboard` (Octave GUI) offers filters by age/sex/arrhythmia class and exports the same plots; menu items include patient-level summaries and optional WFDB signal preview when `rdsamp` is available.
+- `ptbxl_data_analysis` prints dataset stats (records/patients, age range, sex split, missing values) and saves PNGs for age/sex/arrhythmia distributions plus SCP co-occurrence.
+- `ptbxl_dashboard` mirrors the plots with GUI filters and patient-level summaries; when WFDB is available it also previews raw ECG signals.
 
-## Octave install notes (when `octave` is missing)
+## Optional: enable WFDB signal preview in the dashboard
+1) Install the MATLAB/Octave WFDB Toolbox (the legacy PhysioNet URL is dead; download the archive manually and copy it to your machine).  
+2) Unpack it somewhere you control, e.g. `unzip wfdb-app-toolbox.zip -d ~/opt/wfdb-toolbox`.  
+3) In Octave/MATLAB before launching the dashboard:
+```octave
+addpath(genpath('~/opt/wfdb-toolbox'));
+setenv('WFDBROOT', getenv('WFDB'));   % WFDB should point to your WFDB C install, e.g. ~/opt/wfdb
+wfdbloadlib;                          % initialize the toolbox
+```
+4) Verify `rdsamp` works (e.g., `rdsamp('/path/to/ptb-xl/1.0.3/records100/00000/00001_lr')`).  
+If WFDB is not present, the dashboard skips signal preview gracefully; if Python `wfdb` is installed, it attempts that as a fallback.
+
+## Install notes (Octave)
 - Debian/Ubuntu/WSL: `sudo apt-get update && sudo apt-get install -y octave`
 - macOS (Homebrew): `brew install octave`
-- Windows: prefer MATLAB or install Octave inside WSL using the Ubuntu command above.
-- Verify with `octave --version`, then run the commands in the quick start.
+- Windows: prefer MATLAB or install Octave inside WSL.
+- Confirm with `octave --version` and then run the quick start above.
 
-## Demo screenshot (add when ready)
-Capture the dashboard and drop the image into the repo, then link it here:
-```
-octave --persist --eval "graphics_toolkit qt; addpath('octave'); pkg load io; ptbxl_dashboard"
-```
-Take an OS screenshot of the running dashboard and save it as `docs/img/dashboard_demo.png` (create the folder if needed). Add the Markdown below once the file exists:
-`![PTB-XL dashboard demo](docs/img/dashboard_demo.png)`
+## Key MATLAB/Octave utilities
+- `ptbxl_data_analysis`: end-to-end summary plus saved figures.
+- `ptbxl_dashboard`: interactive filters, patient summaries, optional WFDB signal preview.
+- `ptbxl_basic_eda`: age/sex distributions, normal vs abnormal split, top arrhythmia counts.
+- `ptbxl_advanced_plots`: arrhythmia age stats, arrhythmia sex distribution, SCP co-occurrence heatmap.
+- `ptbxl_simple_model`: metadata-only logistic regression baseline.
+- `ptbxl_patient_eda`: patient-level counts and arrhythmia prevalence summaries.
 
-## Lightweight models
-- `ptbxl_simple_model`: metadata-only logistic regression (age, sex, height, weight) to separate `NORM` vs non-`NORM`; reports accuracy and a 2×2 confusion matrix.
-- `ptbxl_patient_eda`: patient-level counts (records per patient, arrhythmia prevalence) printed to console and optionally plotted.
+## Outputs and layout
+- Generated assets land in `analysis_results/` (PNGs and text summaries).
+- Source code lives in `octave/`.
+- Presentation for talks is shipped as `presentation.html` (open locally for offline use).
+- Legacy Python artifacts remain only for reference (`best_model.keras`, `data_analysis.ipynb`, `model_test/` images); training/testing scripts are intentionally absent in this MATLAB/Octave-focused branch.
 
-## Helpful scripts
-- `ptbxl_basic_eda`: age/sex distributions, normal vs abnormal split, and top arrhythmia counts.
-- `ptbxl_advanced_plots`: arrhythmia age statistics, arrhythmia sex distribution, and SCP co-occurrence heatmap (saved to `analysis_results/`).
-- `ptbxl_cooccurrence_matrix`: helper to compute SCP co-occurrence across the selected codes.
-
-## Notes on signals
-- For raw ECG previews, install WFDB Toolbox and ensure `WFDBROOT` points to your PTB-XL path. If WFDB is missing, the dashboard attempts a Python `wfdb` fallback when that module is available; otherwise signal preview is skipped.
-- All current MATLAB/Octave utilities operate on metadata; model training on signals is intentionally out of scope for this branch.
-
-## Repository layout
-- `octave/`: all MATLAB/Octave functions listed above.
-- `analysis_results/`: generated PNGs and text summaries.
-- Legacy assets kept only for reference: `best_model.keras`, `data_analysis.ipynb`, `model_test/` images. Python training/testing scripts were removed in this MATLAB-focused branch.
+## Dashboard preview
+WFDB-enabled dashboard capture (signal preview on the right):  
+`![PTB-XL dashboard demo](analysis_results/wfdb.png)`
