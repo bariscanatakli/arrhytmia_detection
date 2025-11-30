@@ -72,4 +72,4 @@ If WFDB is not present, the dashboard skips signal preview gracefully; if Python
 
 ## Dashboard preview
 WFDB-enabled dashboard capture (signal preview on the right):  
-`![PTB-XL dashboard demo](analysis_results/wfdb.png)`
+![PTB-XL dashboard demo](analysis_results/wfdb.png)
