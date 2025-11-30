@@ -89,7 +89,9 @@ function ptbxl_basic_eda(base_directory)
     fprintf('  weight: %.2f %%\n', missing_weight_ratio);
 
     % Gorsellestirmeler icin cikti klasorunu hazirla
-    output_dir = fullfile('..', 'analysis_results');
+    % Cikti klasoru: repo kokundeki analysis_results
+    script_dir = fileparts(mfilename('fullpath'));
+    output_dir = fullfile(script_dir, '..', 'analysis_results');
     if ~exist(output_dir, 'dir')
         mkdir(output_dir);
     end

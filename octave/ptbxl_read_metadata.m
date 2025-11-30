@@ -30,15 +30,18 @@ function metadata = ptbxl_read_metadata(base_directory)
 %   Baris'in arrhythmia_detection projesi icin GNU Octave desteği.
 
     if nargin < 1 || isempty(base_directory)
-        base_directory = fullfile('..', 'dataset', 'physionet.org', 'files', 'ptb-xl', '1.0.3');
+        base_directory = '';
     end
 
+    info = ptbxl_autodetect_base(base_directory);
+    if ~info.ready
+        error(['PTB-XL dataset tespit edilemedi. En iyi aday: ', info.base_path, '\n', ...
+               'Eksik: ', strjoin(info.missing, ', '), '\n', ...
+               'Dataset yolunu PTBXL_BASE ile veya fonksiyon parametresi olarak verin.']);
+    end
+
+    base_directory = info.base_path;
     metadata_file_path = fullfile(base_directory, 'ptbxl_database.csv');
-
-    if ~exist(metadata_file_path, 'file')
-        error(['PTB-XL metadata dosyasi bulunamadi: ', metadata_file_path, ...
-               '\nDataset klasor yapisinin README''de anlatildigi gibi oldugundan emin olun.']);
-    end
 
     % io paketini yuklemeyi dene
     try

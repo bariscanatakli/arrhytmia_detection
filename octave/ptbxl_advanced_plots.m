@@ -19,7 +19,9 @@ function ptbxl_advanced_plots(base_directory)
 
     metadata = ptbxl_read_metadata(base_directory);
 
-    output_dir = fullfile('..', 'analysis_results');
+    % Cikti klasoru: repo kokundeki analysis_results
+    script_dir = fileparts(mfilename('fullpath'));
+    output_dir = fullfile(script_dir, '..', 'analysis_results');
     if ~exist(output_dir, 'dir')
         mkdir(output_dir);
     end

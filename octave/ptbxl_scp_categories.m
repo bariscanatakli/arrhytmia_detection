@@ -10,9 +10,17 @@ function categories = ptbxl_scp_categories(base_directory)
 %   Not: Sadece metadata icin kullanilir; ek paket gerektirmez (csv2cell, io).
 
     if nargin < 1 || isempty(base_directory)
-        base_directory = fullfile('..', 'dataset', 'physionet.org', 'files', 'ptb-xl', '1.0.3');
+        base_directory = '';
     end
 
+    info = ptbxl_autodetect_base(base_directory);
+    if ~info.ready
+        error(['PTB-XL dataset tespit edilemedi. En iyi aday: ', info.base_path, '\n', ...
+               'Eksik: ', strjoin(info.missing, ', '), '\n', ...
+               'Dataset yolunu PTBXL_BASE ile veya fonksiyon parametresi olarak verin.']);
+    end
+
+    base_directory = info.base_path;
     statements_path = fullfile(base_directory, 'scp_statements.csv');
     if ~exist(statements_path, 'file')
         error('scp_statements.csv bulunamadi: %s', statements_path);

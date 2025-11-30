@@ -14,9 +14,17 @@ function ptbxl_data_analysis(base_directory)
 %     - Grafikler `analysis_results/` klasorune PNG olarak kaydedilir.
 
     if nargin < 1 || isempty(base_directory)
-        base_directory = fullfile('..', 'dataset', 'physionet.org', 'files', 'ptb-xl', '1.0.3');
+        base_directory = '';
     end
 
+    info = ptbxl_autodetect_base(base_directory);
+    if ~info.ready
+        error(['PTB-XL dataset tespit edilemedi. En iyi aday: ', info.base_path, '\n', ...
+               'Eksik: ', strjoin(info.missing, ', '), '\n', ...
+               'Dataset yolunu PTBXL_BASE ile veya fonksiyon parametresi olarak verin.']);
+    end
+
+    base_directory = info.base_path;
     metadata_file_path = fullfile(base_directory, 'ptbxl_database.csv');
 
     fprintf('PTB-XL data analysis (GNU Octave) basliyor...\n');

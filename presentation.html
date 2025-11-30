@@ -4,12 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PTB-XL Data Analysis</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Merriweather:wght@400;500;700&display=swap"
-        rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <style>
 /* 1. THE SETUP - LIGHT THEME WITH SCROLL SNAP */
 
@@ -62,7 +56,7 @@ body {
 
 .slide-container h1 {
   color: #0369a1;
-  font-family: "Merriweather", serif;
+  font-family: "Merriweather", Georgia, "Times New Roman", serif;
   font-weight: 900;
   line-height: 1.1;
   margin: 0;
@@ -70,7 +64,7 @@ body {
 }
 
 .slide-container .slide-title {
-  font-family: "Merriweather", serif;
+  font-family: "Merriweather", Georgia, "Times New Roman", serif;
   font-weight: 700;
   margin: 0;
   color: #0369a1;
@@ -83,7 +77,7 @@ body {
 }
 
 .slide-container h3 {
-  font-family: "Merriweather", serif;
+  font-family: "Merriweather", Georgia, "Times New Roman", serif;
   font-weight: 700;
   font-size: 28px;
   margin-bottom: 15px;
@@ -92,7 +86,7 @@ body {
 
 .slide-container p,
 .slide-container li {
-  font-family: "DM Sans", sans-serif;
+  font-family: "DM Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
   font-size: 20px;
   line-height: 1.6;
   color: #475569;
@@ -205,7 +199,18 @@ body {
   box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.05);
 }
 
-.bullet-list i {
+.bullet-list .icon-text {
+  margin-right: 10px;
+}
+
+.hero-icon {
+  display: inline-block;
+  font-size: 250px;
+  color: #e0f2fe;
+  line-height: 1;
+}
+
+.bullet-list .bullet-icon {
   color: #0284c7;
   font-size: 24px;
   left: 20px;
@@ -364,7 +369,7 @@ body, html, .slide-container {
     <div class="content-area" style="text-align: left; border-left: 16px solid #0369a1; padding-left: 60px;">
         <h1>PTB-XL Data Analysis</h1>
         <p class="subtitle">Exploratory Data Analysis (EDA) & MATLAB Dashboard Integration</p>
-        <p style="margin-top: 40px; font-size: 24px; color: #64748b;"><i class="fa-regular fa-calendar"></i> Project Overview Presentation</p>
+        <p style="margin-top: 40px; font-size: 24px; color: #64748b;"><span class="icon-text">📅</span> Project Overview Presentation</p>
     </div>
 </div>
 
@@ -375,16 +380,15 @@ body, html, .slide-container {
         <div class="two-column">
             <div class="bullet-list">
                 <ul>
-                    <li><i class="fa-solid fa-database"></i> <strong>Large Scale:</strong> A major dataset comprising <strong>21,837</strong> clinical 12-lead ECG records.</li>
-                    <li><i class="fa-solid fa-users"></i> <strong>Patient Diversity:</strong> Data collected from <strong>18,885</strong> unique patients.</li>
-                    <li><i class="fa-solid fa-clock"></i> <strong>Duration:</strong> Each recording is exactly 10 seconds long.</li>
-                    <li><i class="fa-solid fa-user-doctor"></i> <strong>Annotation:</strong> Interpreted by cardiologists according to the SCP-ECG standard.</li>
-                    <li><i class="fa-solid fa-file-waveform"></i> <strong>Format:</strong> Stored in WFDB format with 500Hz & 100Hz sampling.</li>
+                    <li><span class="bullet-icon" aria-hidden="true">🗄️</span> <strong>Large Scale:</strong> A major dataset comprising <strong>21,837</strong> clinical 12-lead ECG records.</li>
+                    <li><span class="bullet-icon" aria-hidden="true">👥</span> <strong>Patient Diversity:</strong> Data collected from <strong>18,885</strong> unique patients.</li>
+                    <li><span class="bullet-icon" aria-hidden="true">⏱️</span> <strong>Duration:</strong> Each recording is exactly 10 seconds long.</li>
+                    <li><span class="bullet-icon" aria-hidden="true">🩺</span> <strong>Annotation:</strong> Interpreted by cardiologists according to the SCP-ECG standard.</li>
+                    <li><span class="bullet-icon" aria-hidden="true">📈</span> <strong>Format:</strong> Stored in WFDB format with 500Hz & 100Hz sampling.</li>
                 </ul>
             </div>
             <div class="image-wrapper" style="background: white; border: none; box-shadow: none;">
-                 <!-- Using a font awesome icon as a visual representation since no specific image was provided for this -->
-                 <i class="fa-solid fa-heart-pulse" style="font-size: 250px; color: #e0f2fe;    "></i>
+                 <span class="hero-icon" aria-hidden="true">💓</span>
             </div>
         </div>
     </div>
@@ -407,7 +411,7 @@ body, html, .slide-container {
                 </ul>
             </div>
             <div class="image-wrapper">
-                <img src="octave_age_group_sex_distribution.png" alt="Age Group & Sex Distribution Chart" onerror="handleImageError(this)">
+                <img src="analysis_results/octave_age_group_sex_distribution.png" alt="Age Group & Sex Distribution Chart" onerror="handleImageError(this)">
             </div>
         </div>
     </div>
@@ -419,7 +423,7 @@ body, html, .slide-container {
     <div class="content-area">
         <div class="two-column">
             <div class="image-wrapper">
-                <img src="octave_age_distribution.png" alt="General Age Histogram" onerror="handleImageError(this)">
+                <img src="analysis_results/octave_age_distribution.png" alt="General Age Histogram" onerror="handleImageError(this)">
             </div>
             <div>
                 <h3>Detailed Age Histogram</h3>
@@ -440,16 +444,16 @@ body, html, .slide-container {
     <div class="content-area">
         <div class="two-column">
             <div class="image-wrapper">
-                <img src="octave_arrhythmia_class_distribution.png" alt="Arrhythmia Class Distribution" onerror="handleImageError(this)">
+                <img src="analysis_results/octave_arrhythmia_class_distribution.png" alt="Arrhythmia Class Distribution" onerror="handleImageError(this)">
             </div>
             <div>
                 <h3>Class Imbalance</h3>
                 <p>Our dashboard analysis highlights a severe class imbalance, a common challenge in medical datasets.</p>
                 <div class="bullet-list" style="margin-top: 20px;">
                     <ul>
-                        <li><i class="fa-solid fa-triangle-exclamation"></i> <strong>Dominant Classes:</strong> Normal (NORM) and Sinus Rhythm (SR) constitute the majority.</li>
-                        <li><i class="fa-solid fa-scale-unbalanced"></i> <strong>Rare Classes:</strong> Pathologies like AFLT (Atrial Flutter) are underrepresented.</li>
-                        <li><i class="fa-solid fa-wrench"></i> <strong>Solution:</strong> Requires weighted loss functions.</li>
+                        <li><span class="bullet-icon" aria-hidden="true">⚠️</span> <strong>Dominant Classes:</strong> Normal (NORM) and Sinus Rhythm (SR) constitute the majority.</li>
+                        <li><span class="bullet-icon" aria-hidden="true">⚖️</span> <strong>Rare Classes:</strong> Pathologies like AFLT (Atrial Flutter) are underrepresented.</li>
+                        <li><span class="bullet-icon" aria-hidden="true">🛠️</span> <strong>Solution:</strong> Requires weighted loss functions.</li>
                     </ul>
                 </div>
             </div>
@@ -472,7 +476,7 @@ body, html, .slide-container {
                 </ul>
             </div>
             <div class="image-wrapper">
-                <img src="octave_arrhythmia_sex_distribution.png" alt="Sex Distribution per Arrhythmia Class" onerror="handleImageError(this)">
+                <img src="analysis_results/octave_arrhythmia_sex_distribution.png" alt="Sex Distribution per Arrhythmia Class" onerror="handleImageError(this)">
             </div>
         </div>
     </div>
@@ -484,17 +488,17 @@ body, html, .slide-container {
     <div class="tile-content-wrapper">
         <div class="tiled-content">
             <div class="tile">
-                <div class="icon"><i class="fa-solid fa-file-medical"></i></div>
+                <div class="icon" aria-hidden="true">📄</div>
                 <h3>SCP Codes</h3>
                 <p>Standardized diagnostic codes per record (e.g., 'AFIB': 100.0). Supports multi-label classification logic.</p>
             </div>
             <div class="tile">
-                <div class="icon"><i class="fa-solid fa-id-card"></i></div>
+                <div class="icon" aria-hidden="true">🪪</div>
                 <h3>Demographics</h3>
                 <p>Patient ID, Age, Sex, Height, and Weight. Missing values are sanitized (NaN handling) via MATLAB scripts.</p>
             </div>
             <div class="tile">
-                <div class="icon"><i class="fa-solid fa-database"></i></div>
+                <div class="icon" aria-hidden="true">🗃️</div>
                 <h3>Signal References</h3>
                 <p>Pointers to raw high-resolution (500Hz) and low-resolution (100Hz) WFDB signal files.</p>
             </div>
@@ -508,10 +512,10 @@ body, html, .slide-container {
     <div class="content-area">
         <div class="bullet-list">
             <ul>
-                <li><i class="fa-solid fa-filter"></i> <strong>Criteria-Based Selection:</strong> <br>Interactive UI allows selection by age range, sex, and specific arrhythmia type.</li>
-                <li><i class="fa-solid fa-code"></i> <strong>Backend Processing:</strong> <br><code>ptbxl_read_metadata.m</code> scans CSV using logical indexing for O(1) access speed.</li>
-                <li><i class="fa-solid fa-chart-column"></i> <strong>Real-Time Visualization:</strong> <br>Histograms update instantly to reflect the selected sub-population's statistics.</li>
-                <li><i class="fa-solid fa-microscope"></i> <strong>Deep Dive:</strong> <br>Allows isolation of specific cases (e.g., "Females under 40 with MI") for detailed review.</li>
+                <li><span class="bullet-icon" aria-hidden="true">🧭</span> <strong>Criteria-Based Selection:</strong> <br>Interactive UI allows selection by age range, sex, and specific arrhythmia type.</li>
+                <li><span class="bullet-icon" aria-hidden="true">💻</span> <strong>Backend Processing:</strong> <br><code>ptbxl_read_metadata.m</code> scans CSV using logical indexing for O(1) access speed.</li>
+                <li><span class="bullet-icon" aria-hidden="true">📊</span> <strong>Real-Time Visualization:</strong> <br>Histograms update instantly to reflect the selected sub-population's statistics.</li>
+                <li><span class="bullet-icon" aria-hidden="true">🔬</span> <strong>Deep Dive:</strong> <br>Allows isolation of specific cases (e.g., "Females under 40 with MI") for detailed review.</li>
             </ul>
         </div>
     </div>
@@ -531,7 +535,7 @@ body, html, .slide-container {
         </ul>
     </div>
     <div class="image-container">
-        <img src="real_patient_signals.png" class="bleed-image-side" alt="12-Lead ECG Signal Plot" onerror="handleImageError(this)">
+        <img src="analysis_results/wfdb.png" class="bleed-image-side" alt="12-Lead ECG Signal Plot" onerror="handleImageError(this)">
     </div>
 </div>
 
@@ -541,7 +545,7 @@ body, html, .slide-container {
     <div class="content-area">
         <div class="two-column">
             <div class="image-wrapper">
-                <img src="octave_age_normal_vs_abnormal.png" alt="Normal vs Abnormal Age Distribution" onerror="handleImageError(this)">
+                <img src="analysis_results/octave_age_normal_vs_abnormal.png" alt="Normal vs Abnormal Age Distribution" onerror="handleImageError(this)">
             </div>
             <div>
                 <h3>Baseline Model: Normal vs Abnormal</h3>
@@ -568,7 +572,7 @@ body, html, .slide-container {
                 <p>This helps in defining multi-label learning strategies.</p>
             </div>
             <div class="image-wrapper">
-                <img src="octave_scp_cooccurrence_heatmap_normalized.png" alt="SCP Codes Co-occurrence Heatmap" onerror="handleImageError(this)">
+                <img src="analysis_results/octave_scp_cooccurrence_heatmap_normalized.png" alt="SCP Codes Co-occurrence Heatmap" onerror="handleImageError(this)">
             </div>
         </div>
     </div>
@@ -580,7 +584,7 @@ body, html, .slide-container {
     <div class="content-area">
         <div class="two-column">
              <div class="image-wrapper">
-                <img src="octave_arrhythmia_age_stats.png" alt="Average age statistics per arrhythmia class" onerror="handleImageError(this)">
+                <img src="analysis_results/octave_arrhythmia_age_stats.png" alt="Average age statistics per arrhythmia class" onerror="handleImageError(this)">
             </div>
             <div>
                 <h3>Mean Age and Standard Deviation</h3>
@@ -663,7 +667,7 @@ body, html, .slide-container {
 <!-- Slide 15: Demo Time -->
 <div class="slide-container demo-slide">
     <div class="content-area" style="text-align: center;">
-        <i class="fa-solid fa-laptop-code demo-icon"></i>
+        <span class="hero-icon" style="font-size: 180px; color: #dbeafe;" aria-hidden="true">💻</span>
         <h1 style="font-size: 100px; margin-bottom: 20px;">Demo Time</h1>
         <p style="font-size: 32px;">Let's run the Dashboard live.</p>
     </div>
